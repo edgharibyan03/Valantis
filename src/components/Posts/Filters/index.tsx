@@ -5,11 +5,11 @@ import { getFields, getPostsFields } from "../../../app/slices/posts";
 import { useAppDispatch, useAppSelector } from "../../../app/hooks"
 
 interface props {
-  filterObj: {
-    price: number,
-    brand: null | string,
-    product: string
-  },
+  // filterObj: {
+  //   price: number,
+  //   brand: null | string,
+  //   product: string
+  // },
   handleSetFilters: (obj: {
     price?: number,
     brand?: null | string,
@@ -52,10 +52,22 @@ export default function Filters({
 
   return (
     <div className="posts-filters">
-      <input type="text" placeholder="Product" onChange={e => handleGetPosts({
+      <input type="text" placeholder="Product" onKeyDown={(e: any) => {
+        if (e.key === 'Enter') {
+          handleGetPosts({
+            product: +e.target.value
+          })
+        }
+      }} onChange={e => handleGetPosts({
         product: e.target.value
       })} />
-      <input type="number" placeholder="Price" onChange={e => handleGetPosts({
+      <input type="number" placeholder="Price" onKeyDown={(e: any) => {
+        if (e.key === 'Enter') {
+          handleGetPosts({
+            price: +e.target.value
+          })
+        }
+      }} onChange={e => handleGetPosts({
         price: +e.target.value
       })} />
       <select name="brand" onChange={e => {

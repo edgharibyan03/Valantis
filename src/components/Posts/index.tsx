@@ -22,15 +22,17 @@ export default function Posts() {
     limit: 50
   })
 
-  const [filterObj, setFilterObj] = useState<{
-    price: number,
-    brand: null | string,
-    product: string
-  }>({
-    price: 0,
-    brand: null,
-    product: ''
-  })
+  const [showPagination, setShowPagination] = useState<boolean>(true)
+
+  // const [filterObj, setFilterObj] = useState<{
+  //   price: number,
+  //   brand: null | string,
+  //   product: string
+  // }>({
+  //   price: 0,
+  //   brand: null,
+  //   product: ''
+  // })
 
   const handleGetPosts = useCallback((filterObj: {
     offset: number,
@@ -54,7 +56,7 @@ export default function Posts() {
 
   const handleGetPostsByFilters = useCallback((newObj: any) => {
     dispatch(getPostsByFilters({
-      filterObj,
+      filterObj: newObj,
       cb: () => handleGetPostsByFilters(newObj)
     }))
   }, [])
@@ -64,22 +66,24 @@ export default function Posts() {
     brand?: null | string,
     product?: string
   }) => {
-    setFilterObj(prev => {
-      const newObj = {
-        ...prev,
-        ...obj
-      }
+    if (obj.brand || obj.price || obj.product) {
+      handleGetPostsByFilters(obj)
+      setShowPagination(false)
+    } else {
+      handleGetPosts(paginationObj)
+      setShowPagination(true)
+    }
+    // setFilterObj(prev => {
+    //   const newObj = {
+    //     ...prev,
+    //     ...obj
+    //   }
 
-      if (!newObj.brand && !newObj.price && !newObj.product) {
-        handleGetPosts(paginationObj)
-      } else {
-        handleGetPostsByFilters(newObj)
-      }
 
-      return newObj
-    })
+    //   return newObj
+    // })
 
-  }, [filterObj])
+  }, [])
 
   useEffect(() => {
     handleGetPosts(paginationObj)
@@ -88,7 +92,7 @@ export default function Posts() {
   return (
     <div className="posts">
       <Filters
-        filterObj={filterObj}
+        // filterObj={filterObj}
         handleSetFilters={handleSetFilters}
       />
       {
@@ -96,11 +100,11 @@ export default function Posts() {
           <PostsList
             postsList={postsList.list}
           />
-          <PostsPagination
+          {showPagination && <PostsPagination
             filterObj={paginationObj}
             postsList={postsList.list}
             handleChangePagination={handleChangePagination}
-          />
+          />}
         </>
       }
     </div>
