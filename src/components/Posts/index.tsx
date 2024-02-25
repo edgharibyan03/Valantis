@@ -22,7 +22,7 @@ export default function Posts() {
     limit: 50
   })
 
-  const [showPagination, setShowPagination] = useState<boolean>(true)
+  // const [showPagination, setShowPagination] = useState<boolean>(true)
 
   // const [filterObj, setFilterObj] = useState<{
   //   price: number,
@@ -68,10 +68,10 @@ export default function Posts() {
   }) => {
     if (obj.brand || obj.price || obj.product) {
       handleGetPostsByFilters(obj)
-      setShowPagination(false)
+      // setShowPagination(false)
     } else {
       handleGetPosts(paginationObj)
-      setShowPagination(true)
+      // setShowPagination(true)
     }
     // setFilterObj(prev => {
     //   const newObj = {
@@ -100,11 +100,11 @@ export default function Posts() {
           <PostsList
             postsList={postsList.list}
           />
-          {showPagination && <PostsPagination
+          <PostsPagination
             filterObj={paginationObj}
             postsList={postsList.list}
             handleChangePagination={handleChangePagination}
-          />}
+          />
         </>
       }
     </div>
